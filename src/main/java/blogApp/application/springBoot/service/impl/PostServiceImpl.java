@@ -6,6 +6,7 @@ import blogApp.application.springBoot.payload.PostDto;
 import blogApp.application.springBoot.payload.PostResponse;
 import blogApp.application.springBoot.repository.PostRepository;
 import blogApp.application.springBoot.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,9 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
+    private ModelMapper modelMapper;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository,ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -38,22 +41,12 @@ public class PostServiceImpl implements PostService {
 
     //Convert Post to PostDto
     private PostDto mapToDto(Post post){
-        PostDto postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setDescription(post.getDescription());
-        postDto.setContent(post.getContent());
-        return postDto;
-
+        return modelMapper.map(post,PostDto.class);
     }
 
     //Convert PostDto to Post
     private Post mapToPost(PostDto postDto){
-        Post newPost = new Post();
-        newPost.setTitle(postDto.getTitle());
-        newPost.setContent(postDto.getContent());
-        newPost.setDescription(postDto.getDescription());
-        return newPost;
+        return modelMapper.map(postDto,Post.class);
     }
 
     @Override
