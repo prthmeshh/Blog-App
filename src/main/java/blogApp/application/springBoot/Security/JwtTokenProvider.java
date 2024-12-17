@@ -71,7 +71,6 @@ public class JwtTokenProvider {
             throw new BlogAPIException(HttpStatus.BAD_REQUEST,"String is null or empty");
         }
 
-
         return true;
     }
 

@@ -1,5 +1,6 @@
 package blogApp.application.springBoot.service.impl;
 
+import blogApp.application.springBoot.Security.JwtTokenProvider;
 import blogApp.application.springBoot.entity.Role;
 import blogApp.application.springBoot.entity.User;
 import blogApp.application.springBoot.exception.BlogAPIException;
@@ -27,14 +28,18 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
+    private JwtTokenProvider tokenProvider;
+
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            UserRepository userRepository,
                            RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           JwtTokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -44,7 +49,9 @@ public class AuthServiceImpl implements AuthService {
                         loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        return "User logged-in successfully!";
+
+        String token = tokenProvider.generateToken(authenticate);
+        return token;
 
     }
 
