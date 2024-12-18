@@ -10,4 +10,8 @@ public interface CategoryService {
 
     CategoryDto getCategoryById(long categoryId);
     List<CategoryDto> getAllCategories();
+
+    CategoryDto updateCategory(CategoryDto categoryDto,long categoryId);
+
+    String deleteCategory(long categoryId);
 }
